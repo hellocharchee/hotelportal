@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Charchee | Superior Hospitality Info Hubs</title>
+    <meta name="description" content="Frictionless, multilingual hospitality info hubs for organizations and communities.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        cursive: ['Dancing Script', 'cursive'],
+                    },
+                    colors: {
+                        brand: {
+                            /* Elegant Champagne Gold / Amber for luxury tech */
+                            light: '#fbbf24', DEFAULT: '#d97706', dark: '#b45309', 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.8); }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .dark .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-card {
+            background-color: rgba(255, 255, 255, 0.75); 
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 0.75rem; 
+            overflow: hidden; 
+            transition: all 0.2s ease;
+        }
+        .dark .menu-card {
+            background-color: rgba(30, 41, 59, 0.85); 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .menu-card:hover {
+            transform: translateY(-1px);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-color: rgba(217, 119, 6, 0.3);
+        }
+        .dark .menu-card:hover {
+            background-color: rgba(51, 65, 85, 0.9);
+            border-color: rgba(217, 119, 6, 0.4);
+        }
+
+        .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .accordion-inner {
+            min-height: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            padding: 0 1.5rem; 
+            background-color: rgba(255, 255, 255, 0.5);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        .dark .accordion-inner {
+            background-color: rgba(30, 41, 59, 0.95); 
+            border-top: none; 
+        }
+
+        .menu-card.active .accordion-content { grid-template-rows: 1fr; }
+        .menu-card.active .accordion-inner { opacity: 1; padding-bottom: 1.5rem; padding-top: 0.5rem; }
+        .menu-card.active { background-color: rgba(255, 255, 255, 0.95); }
+        .dark .menu-card.active { background-color: rgba(30, 41, 59, 0.95); }
+
+        .icon { transition: transform 0.3s ease; }
+        .menu-card.active .icon { transform: rotate(180deg); }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .dark .theme-toggle {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .theme-toggle:hover { transform: scale(1.1); }
+
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .animate-text-gradient {
+            background: linear-gradient(
+                270deg, 
+                #fbbf24, 
+                #FFFFFF, 
+                #d97706, 
+                #fbbf24
+            );
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient-flow 3s ease infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        @keyframes pulse-bar-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(217, 119, 6, 0.4); transform: scaleX(1); opacity: 0.8; }
+            50% { box-shadow: 0 0 25px rgba(217, 119, 6, 0.9); transform: scaleX(1.15); opacity: 1; }
+        }
+        
+        .animate-pulse-bar {
+            animation: pulse-bar-glow 2.5s ease-in-out infinite;
+        }
+
+        /* Splash Screen Styles */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1), visibility 1s;
+        }
+        #splash-screen.hidden-splash {
+            opacity: 0;
+            transform: scale(1.05);
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .splash-welcome {
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: splashFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+        }
+        .splash-text {
+            opacity: 0;
+            transform: scale(0.95);
+            animation: splashPopIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.6s;
+        }
+        .splash-line {
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #d97706, transparent);
+            border-radius: 9999px;
+            margin-top: 1.5rem;
+            animation: splashLineExpand 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s;
+            box-shadow: 0 0 20px rgba(217, 119, 6, 0.6);
+        }
+        .splash-slogan {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: splashFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.6s;
+        }
+        
+        @keyframes splashFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes splashPopIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes splashLineExpand {
+            to { width: 14rem; }
+        }
+
+        .fade-in-up { opacity: 0; transform: translateY(20px); }
+        .app-loaded .fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .app-loaded .stagger-1 { animation-delay: 100ms; } 
+        .app-loaded .stagger-2 { animation-delay: 200ms; } 
+        .app-loaded .stagger-3 { animation-delay: 300ms; }
+
+        .view-section { animation: swivelIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes swivelIn {
+            from { opacity: 0; transform: translateX(15px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800 dark:text-slate-100 min-h-screen flex flex-col items-center bg-slate-100 dark:bg-slate-900 transition-colors duration-500">
+    
+    <!-- Splash Screen Reveal -->
+    <div id="splash-screen" class="bg-gradient-to-br from-slate-900 via-slate-800 to-black">
+        <div class="flex flex-col items-center justify-center text-center px-4">
+            <span class="splash-welcome text-brand-light font-bold tracking-[0.3em] uppercase text-xs sm:text-sm mb-4">Welcome To</span>
+            <h1 class="font-cursive text-6xl sm:text-8xl text-white tracking-tight splash-text drop-shadow-2xl">
+                Hello Charchee
+            </h1>
+            <div class="splash-line"></div>
+            <h2 class="font-cursive text-3xl sm:text-5xl text-slate-300 drop-shadow-md splash-slogan mt-6" data-key="footer_slogan">
+                Superior Hospitality Info Hubs.
+            </h2>
+        </div>
+    </div>
+
+    <!-- Blank & Gold Clean Gradient Background -->
+    <div class="fixed inset-0 z-[-2] bg-slate-100 dark:bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-200/40 via-transparent to-transparent dark:from-amber-900/20 dark:via-transparent dark:to-transparent"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-slate-200 via-transparent to-transparent dark:from-slate-800/50 dark:via-transparent dark:to-transparent"></div>
+    </div>
+
+    <div class="fixed inset-0 z-[-2]">
+        <img src="https://i.imgur.com/kqyiRm2.jpeg" alt="Charchee Background" class="w-full h-full object-cover object-center scale-105 filter blur-sm transition-all duration-700 brightness-100 dark:brightness-[0.4]">
+    </div>
+    <div class="fixed inset-0 z-[-1] bg-gradient-to-b from-white/20 via-slate-900/40 to-slate-900/80 dark:from-black/60 dark:via-black/50 dark:to-black/80 pointer-events-none transition-all duration-700"></div>
+
+    <div class="w-full max-w-3xl px-4 py-8 sm:px-6 lg:px-8 flex-grow flex flex-col relative z-0">
+        
+        <!-- Controls -->
+        <div class="flex justify-center items-center mb-6 sticky top-4 z-50 relative">
+            <div id="languageSelector" class="bg-white/70 dark:bg-slate-800/80 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-full px-6 py-3 flex gap-4 sm:gap-6 shadow-xl fade-in-up transition-colors duration-300">
+                <button data-lang="en" class="lang-btn active transition-transform hover:scale-110 opacity-100" aria-label="English"><img src="https://flagcdn.com/w40/us.png" class="w-6 h-6 rounded-full object-cover shadow-sm" alt="USA Flag"></button>
+                <button data-lang="es" class="lang-btn transition-transform hover:scale-110 opacity-60 hover:opacity-100" aria-label="Español"><img src="https://flagcdn.com/w40/es.png" class="w-6 h-6 rounded-full object-cover shadow-sm" alt="Spain Flag"></button>
+                <button data-lang="de" class="lang-btn transition-transform hover:scale-110 opacity-60 hover:opacity-100" aria-label="Deutsch"><img src="https://flagcdn.com/w40/de.png" class="w-6 h-6 rounded-full object-cover shadow-sm" alt="Germany Flag"></button>
+                <button data-lang="fr" class="lang-btn transition-transform hover:scale-110 opacity-60 hover:opacity-100" aria-label="Français"><img src="https://flagcdn.com/w40/fr.png" class="w-6 h-6 rounded-full object-cover shadow-sm" alt="France Flag"></button>
+                <button data-lang="zh" class="lang-btn transition-transform hover:scale-110 opacity-60 hover:opacity-100" aria-label="中文"><img src="https://flagcdn.com/w40/cn.png" class="w-6 h-6 rounded-full object-cover shadow-sm" alt="China Flag"></button>
+                <button data-lang="ja" class="lang-btn transition-transform hover:scale-110 opacity-60 hover:opacity-100" aria-label="日本語"><img src="https://flagcdn.com/w40/jp.png" class="w-6 h-6 rounded-full object-cover shadow-sm" alt="Japan Flag"></button>
+                <button data-lang="pl" class="lang-btn transition-transform hover:scale-110 opacity-60 hover:opacity-100" aria-label="Polski"><img src="https://flagcdn.com/w40/pl.png" class="w-6 h-6 rounded-full object-cover shadow-sm" alt="Polish Flag"></button>
+            </div>
+            <button id="themeToggle" class="theme-toggle ml-4 p-3 rounded-full shadow-lg text-slate-700 dark:text-yellow-300 fade-in-up" aria-label="Toggle Dark Mode" style="animation-delay: 100ms;">
+                <svg class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </div>
+
+        <header class="text-center mb-8 fade-in-up stagger-1 relative z-40">
+            <h1 class="font-cursive text-5xl sm:text-7xl text-slate-800 dark:text-white tracking-tight drop-shadow-lg transition-colors duration-300" data-key="company_name">
+                Hello Charchee
+            </h1>
+            <p class="mt-2 text-lg sm:text-2xl font-light text-slate-600 dark:text-slate-300 tracking-wide" data-key="company_sub">
+                Hospitality Info Hubs
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 mt-4 text-xs sm:text-sm font-semibold text-brand-dark dark:text-brand-light drop-shadow-md tracking-wide">
+                <span id="live-clock" class="whitespace-nowrap"></span>
+                <span class="opacity-40 text-slate-500 dark:text-slate-400 hidden sm:inline">•</span>
+                <span id="live-weather" class="animate-pulse whitespace-nowrap">☀️ --&deg;F / --&deg;C</span>
+            </div>
+            <div class="h-1.5 w-24 bg-brand rounded-full mx-auto mt-6 animate-pulse-bar transition-all duration-300"></div>
+        </header>
+
+        <!-- 3-Way Tab Navigation -->
+        <div class="flex justify-center mb-8 fade-in-up stagger-2 relative z-40">
+            <div class="bg-white/70 dark:bg-slate-800/80 p-1.5 rounded-full shadow-xl flex gap-1 border border-white/20 overflow-x-auto max-w-full no-scrollbar">
+                <button id="btn-guide" class="px-4 sm:px-6 py-2 whitespace-nowrap rounded-full font-bold text-sm sm:text-base transition-all duration-300 bg-brand text-white shadow-md" data-key="tab_overview">
+                    Overview
+                </button>
+                <button id="btn-menu" class="px-4 sm:px-6 py-2 whitespace-nowrap rounded-full font-bold text-sm sm:text-base transition-all duration-300 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700" data-key="tab_menu">
+                    Feature Menu
+                </button>
+                <button id="btn-directory" class="px-4 sm:px-6 py-2 whitespace-nowrap rounded-full font-bold text-sm sm:text-base transition-all duration-300 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700" data-key="tab_guide_global">
+                    Global Directory
+                </button>
+            </div>
+        </div>
+
+        <div class="glass-panel rounded-3xl p-3 shadow-2xl fade-in-up stagger-2 mb-8">
+            
+            <!-- VIEW 1: PRODUCT OVERVIEW -->
+            <div id="view-guide" class="view-section flex flex-col space-y-1">
+                
+                <!-- The Problem / Philosophy -->
+                <div class="menu-card group">
+                    <button aria-expanded="false" class="accordion-trigger w-full p-5 flex items-center justify-between text-left focus:outline-none">
+                        <div class="flex items-center gap-4">
+                            <div class="p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand-dark dark:text-brand-light transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            </div>
+                            <span class="font-bold text-lg text-slate-800 dark:text-white tracking-wide transition-colors" data-key="card1_title">Zero Friction</span>
+                        </div>
+                        <svg class="icon w-5 h-5 text-slate-400 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner pt-2">
+                            <p class="text-sm sm:text-base leading-relaxed text-slate-600 dark:text-slate-300 mt-4 mb-4 transition-colors" data-key="card1_body1">
+                                Organizations spend millions perfecting their core services, but force users into a frustrating digital labyrinth just to find basic information or resources.
+                            </p>
+                            <p class="p-4 rounded-lg bg-brand/5 border border-brand/20 text-slate-700 dark:text-slate-200 text-sm font-medium transition-colors" data-key="card1_body2">
+                                Hello Charchee is a frictionless, zero-download web application built exclusively for your audience. We replace outdated manuals and clunky corporate portals with an elegant, instant dashboard.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Features -->
+                <div class="menu-card group">
+                    <button aria-expanded="false" class="accordion-trigger w-full p-5 flex items-center justify-between text-left focus:outline-none">
+                        <div class="flex items-center gap-4">
+                            <div class="p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand-dark dark:text-brand-light transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                            </div>
+                            <span class="font-bold text-lg text-slate-800 dark:text-white tracking-wide transition-colors" data-key="card2_title">Profound Capabilities</span>
+                        </div>
+                        <svg class="icon w-5 h-5 text-slate-400 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner pt-2">
+                            <ul class="space-y-4 marker:text-brand list-disc list-outside ml-5 text-sm sm:text-base leading-relaxed text-slate-600 dark:text-slate-300 mt-4 transition-colors pb-4">
+                                <li><strong class="text-slate-800 dark:text-white" data-key="card2_f1_title">Native Translation Matrix:</strong> <span data-key="card2_f1_desc">Instantly converts your entire info hub into 7 languages without relying on inaccurate third-party plugins.</span></li>
+                                <li><strong class="text-slate-800 dark:text-white" data-key="card2_f2_title">The Digital Guide:</strong> <span data-key="card2_f2_desc">A hyper-curated, structured directory of resources, links, and documents tailored specifically to your organization's exact needs.</span></li>
+                                <li><strong class="text-slate-800 dark:text-white" data-key="card2_f3_title">Support Team Relief:</strong> <span data-key="card2_f3_desc">One-tap access to FAQs, live schedules, and direct-contact integration drastically reduces repetitive questions to your operations team.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing & Deployment -->
+                <div class="menu-card group">
+                    <button aria-expanded="false" class="accordion-trigger w-full p-5 flex items-center justify-between text-left focus:outline-none">
+                        <div class="flex items-center gap-4">
+                            <div class="p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand-dark dark:text-brand-light transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <span class="font-bold text-lg text-slate-800 dark:text-white tracking-wide transition-colors" data-key="card3_title">Pricing & Deployment</span>
+                        </div>
+                        <svg class="icon w-5 h-5 text-slate-400 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner pt-2">
+                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 mb-4">
+                                <!-- MONTHLY -->
+                                <div class="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors relative flex flex-col h-full">
+                                    <h3 class="font-bold text-slate-900 dark:text-white transition-colors mb-1" data-key="card3_plan1_title">Monthly Plan</h3>
+                                    <p class="font-mono text-xl text-brand-dark dark:text-brand-light font-bold mb-4">$199 <span class="text-xs text-slate-500 uppercase tracking-wide font-sans font-normal" data-key="card3_month">/ Month</span></p>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-6" data-key="card3_plan1_desc">Secure cloud hosting, SSL security, and continuous updates. Cancel anytime.</p>
+                                    <ul class="space-y-3 mb-6 text-sm text-slate-600 dark:text-slate-400 flex-grow">
+                                        <li class="flex items-start gap-2"><svg class="w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span data-key="plan_feat1">Custom UI Branding</span></li>
+                                        <li class="flex items-start gap-2"><svg class="w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span data-key="plan_feat2">7-Language Matrix</span></li>
+                                        <li class="flex items-start gap-2"><svg class="w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span data-key="plan_feat3">Digital Guide & Local Audits</span></li>
+                                        <li class="flex items-start gap-2"><svg class="w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span data-key="plan_feat4">Secure Cloud Hosting</span></li>
+                                    </ul>
+                                    <button id="stripe-monthly-checkout" class="mt-auto w-full py-2.5 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white font-bold hover:bg-brand hover:text-white dark:hover:bg-brand transition-colors border border-slate-300 dark:border-slate-600" data-key="plan_btn">Select Plan</button>
+                                </div>
+                                <!-- ANNUAL -->
+                                <div class="bg-brand/5 dark:bg-brand/10 p-5 rounded-xl border border-brand/30 dark:border-brand/30 transition-colors relative flex flex-col h-full">
+                                    <div class="absolute top-0 right-0 bg-brand text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider shadow-sm" data-key="card3_annual_badge">2 Months Free</div>
+                                    <h3 class="font-bold text-slate-900 dark:text-white transition-colors mb-1" data-key="card3_plan2_title">Annual Plan</h3>
+                                    <p class="font-mono text-xl text-brand-dark dark:text-brand-light font-bold mb-4">$1,990 <span class="text-xs text-slate-500 uppercase tracking-wide font-sans font-normal" data-key="card3_year">/ Year</span></p>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-6" data-key="card3_plan2_desc">Peace of mind with one simple payment. No monthly charges. 12 months of secure hosting for the price of 10.</p>
+                                    <ul class="space-y-3 mb-6 text-sm text-slate-600 dark:text-slate-400 flex-grow">
+                                        <li class="flex items-start gap-2"><svg class="w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <strong class="text-slate-800 dark:text-white" data-key="plan_feat_all">Everything in Monthly</strong></li>
+                                        <li class="flex items-start gap-2"><svg class="w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span data-key="plan_feat5">Priority Support</span></li>
+                                        <li class="flex items-start gap-2"><svg class="w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span class="font-bold text-brand-dark dark:text-brand-light" data-key="plan_feat6">2 Months Free Included</span></li>
+                                    </ul>
+                                    <button id="stripe-annual-checkout" class="mt-auto w-full py-2.5 rounded-lg bg-brand text-white font-bold hover:bg-brand-dark transition-colors shadow-md" data-key="plan_btn">Select Plan</button>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact / Demo -->
+                <div class="menu-card group">
+                    <button aria-expanded="false" aria-controls="content-contact" class="accordion-trigger w-full p-5 flex items-center justify-between text-left focus:outline-none">
+                        <div class="flex items-center gap-4">
+                            <div class="p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand-dark dark:text-brand-light transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <span class="font-bold text-lg text-slate-800 dark:text-white tracking-wide transition-colors" data-key="card4_title">Get Started</span>
+                        </div>
+                        <svg class="icon w-5 h-5 text-slate-400 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="content-contact" class="accordion-content">
+                        <div class="accordion-inner pt-2 flex flex-col items-center text-center pb-6">
+                            <div class="mb-4 mt-4"> 
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mb-1 transition-colors" data-key="card4_subtitle">Ready to upgrade your user experience?</p>
+                            </div>
+                            <div id="emailCode" class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-inner border border-slate-200 dark:border-slate-700 w-full max-w-sm relative group/code cursor-pointer hover:border-brand/50 transition-colors">
+                                <p class="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 transition-colors" data-key="card4_action">Click to Copy Email</p>
+                                <p class="font-mono text-lg sm:text-xl text-brand-dark dark:text-brand-light font-bold transition-colors truncate">hellocharchee@gmail.com</p>
+                                <div class="absolute inset-0 bg-black/5 dark:bg-white/5 opacity-0 group-hover/code:opacity-100 transition-opacity flex items-center justify-center rounded-xl backdrop-blur-[1px]">
+                                    <span id="emailCopyText" class="text-sm font-bold text-slate-800 dark:text-white bg-white/90 dark:bg-black/90 px-3 py-1 rounded-full shadow-sm" data-key="card4_hover">Copy to Clipboard</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: SAMPLE HUB (Feature Showcase) -->
+            <div id="view-menu" class="hidden view-section">
+                <div class="flex items-center justify-between mb-6 border-b-2 border-brand/30 pb-4">
+                    <div>
+                        <h3 class="font-cursive text-4xl text-slate-800 dark:text-white transition-colors" data-key="menu_title">The Frictionless Hub</h3>
+                        <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1" data-key="menu_subtitle">A Taste of High-End Info Tech</p>
+                    </div>
+                    <div class="hidden sm:flex flex-col items-end gap-1">
+                        <span class="bg-brand/10 dark:bg-brand/20 text-brand-dark dark:text-brand-light text-xs font-bold px-2 py-1 rounded border border-brand/20" data-key="menu_badge">Zero Downloads</span>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div>
+                        <h4 class="flex items-center gap-2 text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 pb-1 border-b border-slate-200 dark:border-slate-700" data-key="menu_cat1">Quick Wins (Fast ROI)</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="menu-card p-4 hover:shadow-lg">
+                                <div class="flex justify-between items-baseline mb-1"><span class="font-bold text-slate-800 dark:text-white" data-key="item_local">The Digital Guide</span><span class="font-mono text-brand-dark dark:text-brand font-bold">Smart</span></div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 leading-snug" data-key="desc_local">Structured, easy-to-navigate resource recommendations that we update to ensure absolute accuracy.</p>
+                            </div>
+                             <div class="menu-card p-4 hover:shadow-lg">
+                                <div class="flex justify-between items-baseline mb-1"><span class="font-bold text-slate-800 dark:text-white" data-key="item_branding">Bespoke Branding</span><span class="font-mono text-brand-dark dark:text-brand font-bold">Chic</span></div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 leading-snug" data-key="desc_branding">We match your exact hex-codes, typography, and imagery. It feels like an extension of your organization.</p>
+                            </div>
+                             <div class="menu-card p-4 hover:shadow-lg">
+                                <div class="flex justify-between items-baseline mb-1"><span class="font-bold text-slate-800 dark:text-white" data-key="item_dynamic">Dynamic Content Modules</span><span class="font-mono text-brand-dark dark:text-brand font-bold">Agile</span></div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 leading-snug" data-key="desc_dynamic">When your team updates policies or schedules, we update the hub in seconds. No more reprinting documents.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                         <h4 class="flex items-center gap-2 text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 pb-1 border-b border-slate-200 dark:border-slate-700" data-key="menu_cat3">Long-Term Value</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div class="menu-card p-4 text-center hover:shadow-lg">
+                                <span class="font-bold text-sm text-slate-800 dark:text-white block mb-1" data-key="item_reviews">High Satisfaction</span>
+                                <span class="font-mono text-brand-dark dark:text-brand font-bold text-xs" data-key="desc_reviews">Frictionless access = better user feedback.</span>
+                            </div>
+                            <div class="menu-card p-4 text-center hover:shadow-lg">
+                                <span class="font-bold text-sm text-slate-800 dark:text-white block mb-1" data-key="item_labor">Time Savings</span>
+                                <span class="font-mono text-brand-dark dark:text-brand font-bold text-xs" data-key="desc_labor">Keep your team focused on high-value work.</span>
+                            </div>
+                            <div class="menu-card p-4 text-center hover:shadow-lg">
+                                <span class="font-bold text-sm text-slate-800 dark:text-white block mb-1" data-key="item_eco">Eco-Friendly</span>
+                                <span class="font-mono text-brand-dark dark:text-brand font-bold text-xs" data-key="desc_eco">Eliminate paper waste and printing costs.</span>
+                            </div>
+                            <div class="menu-card p-4 text-center hover:shadow-lg">
+                                <span class="font-bold text-sm text-slate-800 dark:text-white block mb-1" data-key="item_modern">Modern UX</span>
+                                <span class="font-mono text-brand-dark dark:text-brand font-bold text-xs" data-key="desc_modern">Meet the digital expectations of today's users.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 3: GLOBAL GUIDE (The World-Class Demo) -->
+            <div id="view-directory" class="hidden view-section flex flex-col space-y-1">
+                
+                <!-- The 7 Wonders -->
+                <div class="menu-card group">
+                    <button aria-expanded="false" class="accordion-trigger w-full p-5 flex items-center justify-between text-left focus:outline-none">
+                        <div class="flex items-center gap-4">
+                            <div class="p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand-dark dark:text-brand-light transition-colors">
+                                <span class="text-xl">🌍</span>
+                            </div>
+                            <span class="font-bold text-lg text-slate-800 dark:text-white tracking-wide transition-colors" data-key="glob_cat1">The 7 Wonders (Demo)</span>
+                        </div>
+                        <svg class="icon w-5 h-5 text-slate-400 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner pt-2 pb-2">
+                            <div class="border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-bold text-slate-800 dark:text-white" data-key="glob_w1_title">The Great Wall of China</h5>
+                                    <span class="text-xs font-mono text-brand bg-brand/10 px-2 py-1 rounded">China</span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug" data-key="glob_w1_desc">A marvel of engineering, built to last an eternity—much like the robust digital infrastructure of Hello Charchee.</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=Great+Wall+of+China" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark dark:text-brand mt-2 hover:underline" data-key="dir_directions">Directions &rarr;</a>
+                            </div>
+                            <div class="border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-bold text-slate-800 dark:text-white" data-key="glob_w2_title">Machu Picchu</h5>
+                                    <span class="text-xs font-mono text-brand bg-brand/10 px-2 py-1 rounded">Peru</span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug" data-key="glob_w2_desc">Breathtaking, elevated views. A perfect metaphor for the elevated user experience we provide.</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=Machu+Picchu" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark dark:text-brand mt-2 hover:underline" data-key="dir_directions">Directions &rarr;</a>
+                            </div>
+                            <div class="border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-bold text-slate-800 dark:text-white" data-key="glob_w3_title">The Colosseum</h5>
+                                    <span class="text-xs font-mono text-brand bg-brand/10 px-2 py-1 rounded">Rome, Italy</span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug" data-key="glob_w3_desc">Historic entertainment. We keep your users similarly engaged, informed, and directed.</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=The+Colosseum+Rome" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark dark:text-brand mt-2 hover:underline" data-key="dir_directions">Directions &rarr;</a>
+                            </div>
+                            <div class="border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-bold text-slate-800 dark:text-white" data-key="glob_w4_title">Taj Mahal</h5>
+                                    <span class="text-xs font-mono text-brand bg-brand/10 px-2 py-1 rounded">Agra, India</span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug" data-key="glob_w4_desc">A testament to flawless design and symmetry. Exactly what we aim for with our bespoke UI branding.</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=Taj+Mahal" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark dark:text-brand mt-2 hover:underline" data-key="dir_directions">Directions &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- World Class Dining (Generalized) -->
+                <div class="menu-card group">
+                    <button aria-expanded="false" class="accordion-trigger w-full p-5 flex items-center justify-between text-left focus:outline-none">
+                        <div class="flex items-center gap-4">
+                            <div class="p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand-dark dark:text-brand-light transition-colors">
+                                <span class="text-xl">🏛️</span>
+                            </div>
+                            <span class="font-bold text-lg text-slate-800 dark:text-white tracking-wide transition-colors" data-key="glob_cat2">World-Class Execution (Demo)</span>
+                        </div>
+                        <svg class="icon w-5 h-5 text-slate-400 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner pt-2 pb-2">
+                            <div class="border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-bold text-slate-800 dark:text-white" data-key="glob_d1_title">The Louvre</h5>
+                                    <span class="text-xs font-mono text-brand bg-brand/10 px-2 py-1 rounded">Paris, France</span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug" data-key="glob_d1_desc">A masterpiece of curation. The only thing missing is a 5-star digital hub to navigate it all.</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=Louvre+Museum" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark dark:text-brand mt-2 hover:underline" data-key="dir_directions">Directions &rarr;</a>
+                            </div>
+                            <div class="border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-bold text-slate-800 dark:text-white" data-key="glob_d2_title">CERN Hadron Collider</h5>
+                                    <span class="text-xs font-mono text-brand bg-brand/10 px-2 py-1 rounded">Geneva, Switzerland</span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug" data-key="glob_d2_desc">Precision and perfection at the highest level. We bring that exact same philosophy to our codebase.</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=CERN" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark dark:text-brand mt-2 hover:underline" data-key="dir_directions">Directions &rarr;</a>
+                            </div>
+                            <div class="border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-bold text-slate-800 dark:text-white" data-key="glob_d3_title">MIT Media Lab</h5>
+                                    <span class="text-xs font-mono text-brand bg-brand/10 px-2 py-1 rounded">Cambridge, USA</span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug" data-key="glob_d3_desc">Pioneers of digital innovation. Constantly reinventing the future, just like our dynamic update system.</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=MIT+Media+Lab" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark dark:text-brand mt-2 hover:underline" data-key="dir_directions">Directions &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Global Landmarks -->
+                <div class="menu-card group">
+                    <button aria-expanded="false" class="accordion-trigger w-full p-5 flex items-center justify-between text-left focus:outline-none">
+                        <div class="flex items-center gap-4">
+                            <div class="p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand-dark dark:text-brand-light transition-colors">
+                                <span class="text-xl">🗼</span>
+                            </div>
+                            <span class="font-bold text-lg text-slate-800 dark:text-white tracking-wide transition-colors" data-key="glob_cat3">Iconic Landmarks</span>
+                        </div>
+                        <svg class="icon w-5 h-5 text-slate-400 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-inner pt-2 pb-2">
+                            <div class="border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-bold text-slate-800 dark:text-white" data-key="glob_l1_title">The Eiffel Tower</h5>
+                                    <span class="text-xs font-mono text-brand bg-brand/10 px-2 py-1 rounded">Paris, France</span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug" data-key="glob_l1_desc">A brilliant structure that everyone told them not to build. Sometimes, you just have to disrupt the landscape.</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=Eiffel+Tower+Paris" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark dark:text-brand mt-2 hover:underline" data-key="dir_directions">Directions &rarr;</a>
+                            </div>
+                            <div class="border-b border-slate-200 dark:border-slate-700 py-3 last:border-0">
+                                <div class="flex justify-between items-start">
+                                    <h5 class="font-bold text-slate-800 dark:text-white" data-key="glob_l2_title">The Burj Khalifa</h5>
+                                    <span class="text-xs font-mono text-brand bg-brand/10 px-2 py-1 rounded">Dubai, UAE</span>
+                                </div>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-snug" data-key="glob_l2_desc">The tallest building in the world. Aim high, and provide your users with top-tier technology.</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=Burj+Khalifa+Dubai" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-dark dark:text-brand mt-2 hover:underline" data-key="dir_directions">Directions &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <footer class="text-center mt-auto fade-in-up stagger-3">
+            <p class="font-cursive text-3xl text-slate-800 dark:text-white/90 drop-shadow-sm dark:drop-shadow-md transition-colors" data-key="footer_slogan">Superior Hospitality Info Hubs.</p>
+        </footer>
+    </div>
+
+    <script>
+        const translations = {
+            'en': {
+                tab_overview: "Overview", tab_menu: "Feature Menu", tab_guide_global: "Global Directory",
+                company_name: "Hello Charchee", company_sub: "Hospitality Info Hubs", footer_slogan: "Superior Hospitality Info Hubs.",
+                card1_title: "Zero Friction", card1_body1: "Organizations spend millions perfecting their core services, but force users into a frustrating labyrinth just to find basic information or resources.", card1_body2: "Hello Charchee is a frictionless, zero-download web application built exclusively for your audience. We replace outdated manuals and clunky corporate portals with an elegant, instant dashboard.",
+                card2_title: "Profound Capabilities", card2_f1_title: "Native Translation Matrix:", card2_f1_desc: "Instantly converts your entire info hub into 7 languages without relying on inaccurate third-party plugins.", card2_f2_title: "The Digital Guide:", card2_f2_desc: "A hyper-curated, structured directory of resources, links, and documents tailored specifically to your organization's exact needs.", card2_f3_title: "Support Team Relief:", card2_f3_desc: "One-tap access to FAQs, live schedules, and direct-contact integration drastically reduces repetitive questions to your operations team.",
+                card3_title: "Pricing & Deployment", card3_plan1_title: "Monthly Plan", card3_month: "/ Month", card3_plan1_desc: "Secure cloud hosting, SSL security, and continuous updates. Cancel anytime.", card3_annual_badge: "2 Months Free", card3_plan2_title: "Annual Plan", card3_year: "/ Year", card3_plan2_desc: "Peace of mind with one simple payment. No monthly charges. 12 months of secure hosting for the price of 10.",
+                plan_feat1: "Custom UI Branding", plan_feat2: "7-Language Matrix", plan_feat3: "Digital Guide & Local Audits", plan_feat4: "Secure Cloud Hosting", plan_feat_all: "Everything in Monthly", plan_feat5: "Priority Support", plan_feat6: "2 Months Free Included", plan_btn: "Select Plan",
+                card4_title: "Get Started", card4_subtitle: "Ready to upgrade your user experience?", card4_action: "Click to Copy Email", card4_hover: "Copy to Clipboard",
+                
+                menu_title: "The Frictionless Hub", menu_subtitle: "A Taste of High-End Info Tech", menu_badge: "Zero Downloads",
+                menu_cat1: "Quick Wins (Fast ROI)", item_wifi: "1-Click Access Sharing", desc_wifi: "Users tap to copy passwords or key links. Zero typos, zero frustrating calls to support.", item_qr: "QR Code Deployment", desc_qr: "Place our elegant QR codes in offices, events, or packaging for instant access.",
+                menu_cat2: "Core Engine (Features)", item_translate: "7-Language Matrix", desc_translate: "Native, seamless translation of all policies, schedules, and resources. No third-party plugins.", item_local: "The Digital Guide", desc_local: "Structured, easy-to-navigate resource recommendations that we update to ensure absolute accuracy.", item_branding: "Bespoke Branding", desc_branding: "We match your exact hex-codes, typography, and imagery. It feels like an extension of your organization.", item_dynamic: "Dynamic Content Modules", desc_dynamic: "When your team updates policies or schedules, we update the hub in seconds. No more reprinting documents.",
+                menu_cat3: "Long-Term Value", item_reviews: "High Satisfaction", desc_reviews: "Frictionless access = better user feedback.", item_labor: "Time Savings", desc_labor: "Keep your team focused on high-value work.", item_eco: "Eco-Friendly", desc_eco: "Eliminate paper waste and printing costs.", item_modern: "Modern UX", desc_modern: "Meet the expectations of today's users.",
+                
+                glob_cat1: "The 7 Wonders (Demo)", glob_w1_title: "The Great Wall of China", glob_w1_desc: "A marvel of engineering, built to last an eternity—much like the robust infrastructure of Hello Charchee.", glob_w2_title: "Machu Picchu", glob_w2_desc: "Breathtaking, elevated views. A perfect metaphor for the elevated user experience we provide.", glob_w3_title: "The Colosseum", glob_w3_desc: "Historic entertainment. We keep your users similarly engaged, informed, and directed.", glob_w4_title: "Taj Mahal", glob_w4_desc: "A testament to flawless design and symmetry. Exactly what we aim for with our bespoke UI branding.",
+                glob_cat2: "World-Class Execution (Demo)", glob_d1_title: "The Louvre", glob_d1_desc: "A masterpiece of curation. The only thing missing is a 5-star hub to navigate it all.", glob_d2_title: "CERN Hadron Collider", glob_d2_desc: "Precision and perfection at the highest level. We bring that exact same philosophy to our codebase.", glob_d3_title: "MIT Media Lab", glob_d3_desc: "Pioneers of innovation. Constantly reinventing the future, just like our dynamic update system.",
+                glob_cat3: "Iconic Landmarks", glob_l1_title: "The Eiffel Tower", glob_l1_desc: "A brilliant structure that everyone told them not to build. Sometimes, you just have to disrupt the landscape.", glob_l2_title: "The Burj Khalifa", glob_l2_desc: "The tallest building in the world. Aim high, and provide your users with top-tier technology.",
+                dir_directions: "Directions &rarr;"
+            },
+            'es': {
+                tab_overview: "Resumen", tab_menu: "Menú de Funciones", tab_guide_global: "Directorio Global",
+                company_name: "Hello Charchee", company_sub: "Centros de Info de Hospitalidad", footer_slogan: "Centros de Info de Hospitalidad Superiores.",
+                card1_title: "Cero Fricción", card1_body1: "Las organizaciones gastan millones perfeccionando sus servicios, pero obligan a los usuarios a usar un laberinto frustrante solo para encontrar información básica.", card1_body2: "Hello Charchee es una aplicación web sin descargas, construida exclusivamente para su audiencia. Reemplazamos los manuales obsoletos y portales corporativos con un panel elegante e instantáneo.",
+                card2_title: "Capacidades Profundas", card2_f1_title: "Matriz de Traducción:", card2_f1_desc: "Convierte instantáneamente todo su centro de información a 7 idiomas sin plugins inexactos.", card2_f2_title: "La Guía Digital:", card2_f2_desc: "Un directorio estructurado de recursos y enlaces adaptado a las necesidades exactas de su organización.", card2_f3_title: "Alivio para Soporte:", card2_f3_desc: "El acceso con un toque a preguntas frecuentes y contactos reduce drásticamente las consultas repetitivas a su equipo.",
+                card3_title: "Precios y Despliegue", card3_plan1_title: "Plan Mensual", card3_month: "/ Mes", card3_plan1_desc: "Alojamiento seguro en la nube, seguridad SSL y actualizaciones continuas. Cancele en cualquier momento.", card3_annual_badge: "2 Meses Gratis", card3_plan2_title: "Plan Anual", card3_year: "/ Año", card3_plan2_desc: "Tranquilidad con un pago simple. Sin cargos mensuales. 12 meses de alojamiento seguro por el precio de 10.",
+                plan_feat1: "Marca de Interfaz Personalizada", plan_feat2: "Matriz de 7 Idiomas", plan_feat3: "Guía Digital y Auditorías Locales", plan_feat4: "Alojamiento Seguro en la Nube", plan_feat_all: "Todo lo del plan Mensual", plan_feat5: "Soporte Prioritario", plan_feat6: "2 Meses Gratis Incluidos", plan_btn: "Seleccionar Plan",
+                card4_title: "Comenzar", card4_subtitle: "¿Listo para mejorar la experiencia de sus usuarios?", card4_action: "Copiar correo", card4_hover: "Copiar al portapapeles",
+                
+                menu_title: "El Centro Sin Fricción", menu_subtitle: "Una Muestra de Tecnología de Info", menu_badge: "Sin Descargas",
+                menu_cat1: "Victorias Rápidas (Retorno Rápido)", item_wifi: "Acceso con 1 Clic", desc_wifi: "Los usuarios tocan para copiar contraseñas o enlaces. Cero errores, cero llamadas a soporte.", item_qr: "Despliegue con QR", desc_qr: "Coloque nuestros elegantes códigos QR en oficinas o eventos para acceso instantáneo.",
+                menu_cat2: "Motor Principal (Funciones)", item_translate: "Matriz de 7 Idiomas", desc_translate: "Traducción nativa de políticas y recursos. Sin plugins de terceros.", item_local: "La Guía Digital", desc_local: "Recomendaciones de recursos estructuradas y fáciles de navegar, siempre actualizadas.", item_branding: "Marca a Medida", desc_branding: "Igualamos sus colores y tipografía exacta. Se siente como una extensión de su organización.", item_dynamic: "Módulos de Contenido", desc_dynamic: "Si su equipo actualiza políticas, lo reflejamos en segundos. Se acabó el imprimir papel.",
+                menu_cat3: "Valor a Largo Plazo", item_reviews: "Alta Satisfacción", desc_reviews: "Acceso sin fricción = mejores comentarios de los usuarios.", item_labor: "Ahorro de Tiempo", desc_labor: "Mantenga a su equipo enfocado en el trabajo de alto valor.", item_eco: "Ecológico", desc_eco: "Elimine el desperdicio de papel y los costos de impresión.", item_modern: "UX Moderno", desc_modern: "Cumpla con las expectativas de los usuarios actuales.",
+                
+                glob_cat1: "Las 7 Maravillas (Demo)", glob_w1_title: "La Gran Muralla China", glob_w1_desc: "Una maravilla construida para durar, igual que nuestra infraestructura.", glob_w2_title: "Machu Picchu", glob_w2_desc: "Vistas elevadas impresionantes. Una metáfora perfecta para la experiencia que brindamos.", glob_w3_title: "El Coliseo", glob_w3_desc: "Entretenimiento histórico. Mantenemos a sus usuarios igual de informados y orientados.", glob_w4_title: "Taj Mahal", glob_w4_desc: "Un testimonio de diseño perfecto. Exactamente lo que buscamos con nuestra interfaz.",
+                glob_cat2: "Ejecución de Clase Mundial (Demo)", glob_d1_title: "El Louvre", glob_d1_desc: "Una obra maestra de curación. Solo falta un centro de 5 estrellas para navegarlo.", glob_d2_title: "CERN Gran Colisionador", glob_d2_desc: "Precisión y perfección al más alto nivel. Llevamos esa misma filosofía a nuestro código.", glob_d3_title: "MIT Media Lab", glob_d3_desc: "Pioneros de la innovación. Reinventando el futuro, igual que nuestro sistema de actualización.",
+                glob_cat3: "Lugares Icónicos", glob_l1_title: "La Torre Eiffel", glob_l1_desc: "Una estructura brillante que todos decían que no debían construir. A veces hay que innovar el paisaje.", glob_l2_title: "El Burj Khalifa", glob_l2_desc: "El edificio más alto del mundo. Apunte alto y brinde a sus usuarios tecnología de primer nivel.",
+                dir_directions: "Ruta &rarr;"
+            },
+            'fr': {
+                tab_overview: "Aperçu", tab_menu: "Menu des Fonctionnalités", tab_guide_global: "Annuaire Global",
+                company_name: "Hello Charchee", company_sub: "Centres d'Info d'Accueil", footer_slogan: "Centres d'Info d'Accueil Supérieurs.",
+                card1_title: "Zéro Friction", card1_body1: "Les organisations forcent les utilisateurs dans un labyrinthe frustrant juste pour trouver des informations de base.", card1_body2: "Hello Charchee est une application web sans téléchargement. Nous remplaçons les manuels obsolètes et les intranets par un tableau de bord élégant.",
+                card2_title: "Capacités Profondes", card2_f1_title: "Matrice de Traduction:", card2_f1_desc: "Convertit instantanément votre centre d'information en 7 langues.", card2_f2_title: "Le Guide Numérique:", card2_f2_desc: "Un répertoire de ressources et de liens structuré adapté à vos besoins.", card2_f3_title: "Soulagement du Support:", card2_f3_desc: "L'accès en un clic aux FAQ et contacts réduit considérablement les questions répétitives.",
+                card3_title: "Tarification", card3_plan1_title: "Forfait Mensuel", card3_month: "/ Mois", card3_plan1_desc: "Hébergement cloud sécurisé, sécurité SSL et mises à jour continues. Annulez à tout moment.", card3_annual_badge: "2 Mois Gratuits", card3_plan2_title: "Plan Annuel", card3_year: "/ An", card3_plan2_desc: "Tranquillité d'esprit avec un paiement simple. Aucun frais mensuel. 12 mois d'hébergement sécurisé pour le prix de 10.",
+                plan_feat1: "Image de Marque Personnalisée", plan_feat2: "Matrice 7 Langues", plan_feat3: "Guide Numérique & Audits Locaux", plan_feat4: "Hébergement Cloud Sécurisé", plan_feat_all: "Tout du Forfait Mensuel", plan_feat5: "Support Prioritaire", plan_feat6: "2 Mois Gratuits Inclus", plan_btn: "Sélectionner",
+                card4_title: "Commencer", card4_subtitle: "Prêt à améliorer l'expérience de vos utilisateurs ?", card4_action: "Copier l'e-mail", card4_hover: "Copié !",
+                
+                menu_title: "Le Centre Sans Friction", menu_subtitle: "Technologie d'Info Haut de Gamme", menu_badge: "Sans Téléchargement",
+                menu_cat1: "Gains Rapides (ROI Rapide)", item_wifi: "Accès en 1 Clic", desc_wifi: "Les utilisateurs copient les mots de passe instantanément. Aucun appel au support.", item_qr: "Déploiement QR", desc_qr: "Placez nos élégants QR codes dans vos bureaux pour un accès instantané.",
+                menu_cat2: "Moteur Principal (Fonctions)", item_translate: "Matrice 7 Langues", desc_translate: "Traduction native des politiques et plannings. Sans plugins.", item_local: "Le Guide Numérique", desc_local: "Des recommandations de ressources faciles à naviguer, toujours à jour.", item_branding: "Marque Sur Mesure", desc_branding: "Nous utilisons vos couleurs exactes. C'est une extension de votre organisation.", item_dynamic: "Modules Dynamiques", desc_dynamic: "Nous mettons à jour vos documents en quelques secondes.",
+                menu_cat3: "Valeur à Long Terme", item_reviews: "Haute Satisfaction", desc_reviews: "Accès sans friction = meilleurs retours utilisateurs.", item_labor: "Gain de Temps", desc_labor: "Votre équipe se concentre sur les tâches à forte valeur ajoutée.", item_eco: "Écologique", desc_eco: "Éliminez les déchets papier.", item_modern: "UX Moderne", desc_modern: "Répondez aux attentes des utilisateurs d'aujourd'hui.",
+                
+                glob_cat1: "Les 7 Merveilles (Démo)", glob_w1_title: "La Grande Muraille", glob_w1_desc: "Une merveille d'ingénierie, conçue pour durer, tout comme notre infrastructure.", glob_w2_title: "Machu Picchu", glob_w2_desc: "Des vues élevées, métaphore parfaite de l'expérience utilisateur que nous offrons.", glob_w3_title: "Le Colisée", glob_w3_desc: "Divertissement historique. Nous gardons vos utilisateurs informés et orientés.", glob_w4_title: "Taj Mahal", glob_w4_desc: "Un témoignage de design parfait, exactement ce que nous visons.",
+                glob_cat2: "Exécution Mondiale (Démo)", glob_d1_title: "Le Louvre", glob_d1_desc: "Un chef-d'œuvre de curation. Il ne manque qu'un centre 5 étoiles pour le parcourir.", glob_d2_title: "CERN", glob_d2_desc: "La perfection à son plus haut niveau. La même philosophie s'applique à notre logiciel.", glob_d3_title: "MIT Media Lab", glob_d3_desc: "Pionniers de l'innovation. Ils se réinventent constamment, comme nous.",
+                glob_cat3: "Monuments Emblématiques", glob_l1_title: "La Tour Eiffel", glob_l1_desc: "Parfois, il faut innover pour changer le paysage.", glob_l2_title: "Burj Khalifa", glob_l2_desc: "Le plus haut du monde. Visez haut avec notre technologie.",
+                dir_directions: "Itinéraire &rarr;"
+            },
+            'de': {
+                tab_overview: "Übersicht", tab_menu: "Funktions-Menü", tab_guide_global: "Globales Verzeichnis",
+                company_name: "Hello Charchee", company_sub: "Hospitality Info-Zentren", footer_slogan: "Überlegene Hospitality Info-Zentren.",
+                card1_title: "Null Reibung", card1_body1: "Organisationen zwingen Benutzer oft in ein frustrierendes Labyrinth, nur um grundlegende Informationen zu finden.", card1_body2: "Hello Charchee ist eine reibungslose Web-App ohne Download. Wir ersetzen veraltete Handbücher und Intranets durch ein elegantes Dashboard.",
+                card2_title: "Tiefgreifende Fähigkeiten", card2_f1_title: "Native Übersetzung:", card2_f1_desc: "Übersetzt Ihr gesamtes Informationszentrum sofort in 7 Sprachen.", card2_f2_title: "Der Digitale Guide:", card2_f2_desc: "Ein strukturiertes Verzeichnis von Ressourcen, das genau auf Ihre Organisation zugeschnitten ist.", card2_f3_title: "Entlastung des Supports:", card2_f3_desc: "Ein-Klick-Zugriff auf FAQs und Kontakte reduziert wiederholte Fragen drastisch.",
+                card3_title: "Preise", card3_plan1_title: "Monatsplan", card3_month: "/ Monat", card3_plan1_desc: "Sicheres Cloud-Hosting, SSL-Sicherheit und kontinuierliche Updates. Jederzeit kündbar.", card3_annual_badge: "2 Monate Gratis", card3_plan2_title: "Jahresplan", card3_year: "/ Jahr", card3_plan2_desc: "Sicherheit durch eine einfache Zahlung. Keine monatlichen Gebühren. 12 Monate sicheres Hosting zum Preis von 10.",
+                plan_feat1: "Individuelles UI-Branding", plan_feat2: "7-Sprachen-Matrix", plan_feat3: "Digitaler Guide & Lokale Audits", plan_feat4: "Sicheres Cloud-Hosting", plan_feat_all: "Alles im Monatsplan", plan_feat5: "Prioritäts-Support", plan_feat6: "2 Monate gratis inklusive", plan_btn: "Plan Auswählen",
+                card4_title: "Loslegen", card4_subtitle: "Bereit für das UX-Upgrade?", card4_action: "E-Mail kopieren", card4_hover: "In die Zwischenablage kopieren",
+                
+                menu_title: "Das reibungslose Zentrum", menu_subtitle: "High-End Info-Technologie", menu_badge: "Ohne Download",
+                menu_cat1: "Quick Wins (Schneller ROI)", item_wifi: "1-Klick-Zugang", desc_wifi: "Benutzer kopieren Passwörter mit einem Tippen. Keine Anrufe beim Support.", item_qr: "QR-Code Einsatz", desc_qr: "Platzieren Sie unsere eleganten QR-Codes in Büros für sofortigen Zugang.",
+                menu_cat2: "Kernfunktionen", item_translate: "7-Sprachen-Matrix", desc_translate: "Nahtlose Übersetzung aller Richtlinien. Keine Plugins von Drittanbietern.", item_local: "Der Digitale Guide", desc_local: "Strukturierte Ressourcen-Empfehlungen, die wir aktualisieren, um Genauigkeit zu gewährleisten.", item_branding: "Maßgeschneidertes Branding", desc_branding: "Wir passen uns exakt Ihren Markenfarben an. Eine Erweiterung Ihrer Organisation.", item_dynamic: "Dynamische Inhaltsmodule", desc_dynamic: "Wir aktualisieren Dokumente in Sekunden. Kein Neudruck mehr nötig.",
+                menu_cat3: "Langzeitwert", item_reviews: "Hohe Zufriedenheit", desc_reviews: "Reibungsloser Zugang = besseres Benutzer-Feedback.", item_labor: "Zeitersparnis", desc_labor: "Ihr Team kann sich auf hochwertige Arbeit konzentrieren.", item_eco: "Umweltfreundlich", desc_eco: "Vermeiden Sie Papiermüll und Druckkosten.", item_modern: "Moderne UX", desc_modern: "Erfüllen Sie die Erwartungen der heutigen Nutzer.",
+                
+                glob_cat1: "Die 7 Weltwunder (Demo)", glob_w1_title: "Chinesische Mauer", glob_w1_desc: "Gebaut für die Ewigkeit – genau wie unsere Infrastruktur.", glob_w2_title: "Machu Picchu", glob_w2_desc: "Erhöhte Aussichten. Eine Metapher für das Benutzererlebnis, das wir bieten.", glob_w3_title: "Das Kolosseum", glob_w3_desc: "Historische Unterhaltung. Wir halten Ihre Benutzer informiert.", glob_w4_title: "Taj Mahal", glob_w4_desc: "Ein Zeugnis fehlerfreien Designs. Genau das ist unser Ziel.",
+                glob_cat2: "Weltklasse Ausführung (Demo)", glob_d1_title: "Der Louvre", glob_d1_desc: "Ein Meisterwerk der Kuration. Es fehlt nur ein 5-Sterne Zentrum.", glob_d2_title: "CERN Hadron Collider", glob_d2_desc: "Präzision auf höchstem Niveau. Dieselbe Philosophie für unseren Code.", glob_d3_title: "MIT Media Lab", glob_d3_desc: "Pioniere der Innovation. Sie erfinden sich ständig neu, wie wir.",
+                glob_cat3: "Wahrzeichen", glob_l1_title: "Eiffelturm", glob_l1_desc: "Manchmal muss man die Landschaft einfach verändern.", glob_l2_title: "Burj Khalifa", glob_l2_desc: "Das höchste Gebäude der Welt. Zielen Sie hoch.",
+                dir_directions: "Route &rarr;"
+            },
+            'ja': {
+                tab_overview: "概要", tab_menu: "機能メニュー", tab_guide_global: "グローバルディレクトリ",
+                company_name: "Hello Charchee", company_sub: "ホスピタリティInfoハブ", footer_slogan: "最高のホスピタリティInfoハブ。",
+                card1_title: "摩擦ゼロ", card1_body1: "組織は基本情報を見つけるためだけに、ユーザーを不便な迷路に迷い込ませています。", card1_body2: "ダウンロード不要のWebアプリです。時代遅れのマニュアルや使いにくいポータルを、エレガントなダッシュボードに置き換えます。",
+                card2_title: "卓越した機能", card2_f1_title: "ネイティブ翻訳:", card2_f1_desc: "情報ハブ全体を即座に7か国語に変換します。", card2_f2_title: "デジタルガイド:", card2_f2_desc: "組織のニーズに合わせて厳選された、リソースとリンクの構造化ディレクトリ。", card2_f3_title: "サポートチームの負担軽減:", card2_f3_desc: "FAQや連絡先へのワンタップアクセスにより、繰り返しの質問を劇的に減らします。",
+                card3_title: "料金", card3_plan1_title: "月額プラン", card3_month: "/ 月", card3_plan1_desc: "セキュアなクラウドホスティング、SSLセキュリティ、継続的なアップデート。いつでもキャンセル可能。", card3_annual_badge: "2ヶ月無料", card3_plan2_title: "年間プラン", card3_year: "/ 年", card3_plan2_desc: "シンプルな年1回の支払いで安心。月額料金はありません。10ヶ月分の価格で12ヶ月のセキュアなホスティング。",
+                plan_feat1: "カスタムUIブランディング", plan_feat2: "7言語マトリックス", plan_feat3: "デジタルガイドとローカル監査", plan_feat4: "セキュアなクラウドホスティング", plan_feat_all: "月額プランのすべて", plan_feat5: "優先サポート", plan_feat6: "2ヶ月無料", plan_btn: "プランを選択",
+                card4_title: "始める", card4_subtitle: "ユーザー体験を向上させる準備はできましたか？", card4_action: "メールをコピー", card4_hover: "コピーしました",
+                
+                menu_title: "フリクションレス・ハブ", menu_subtitle: "ハイエンドなInfoテクノロジー", menu_badge: "ダウンロード不要",
+                menu_cat1: "クイックウィン（迅速なROI）", item_wifi: "1クリックアクセス", desc_wifi: "パスワードを簡単にコピーできます。サポートへの苛立たしい電話はもうありません。", item_qr: "QRコード配置", desc_qr: "オフィスやイベントにQRコードを配置するだけで瞬時にアクセス可能です。",
+                menu_cat2: "コア機能", item_translate: "7言語マトリックス", desc_translate: "外部プラグインに依存しない、ポリシーとリソースのシームレスな翻訳。", item_local: "デジタルガイド", desc_local: "正確性を保証するために更新される、ナビゲートしやすいリソース推奨。", item_branding: "オーダーメイドのブランド化", desc_branding: "組織のブランドカラーに完全に一致させ、組織の一部のように感じさせます。", item_dynamic: "動的コンテンツモジュール", desc_dynamic: "チームがポリシーを更新しても、数秒で反映されます。書類の再印刷は不要です。",
+                menu_cat3: "長期的な価値", item_reviews: "高い満足度", desc_reviews: "摩擦のないアクセスは、より良いユーザーフィードバックにつながります。", item_labor: "時間の節約", desc_labor: "チームは価値の高い業務に集中できます。", item_eco: "環境に優しい", desc_eco: "紙の無駄と印刷コストをなくします。", item_modern: "モダンなUX", desc_modern: "今日のユーザーの期待に応えます。",
+
+                glob_cat1: "世界の七不思議（デモ）", glob_w1_title: "万里の長城", glob_w1_desc: "強固なインフラと同様、永遠に残る工学の驚異です。", glob_w2_title: "マチュ・ピチュ", glob_w2_desc: "高台からの絶景。私たちが提供する質の高いユーザー体験の完璧な比喩です。", glob_w3_title: "コロッセオ", glob_w3_desc: "歴史的エンターテイメント。ユーザーに情報を提供し、適切に導きます。", glob_w4_title: "タージ・マハル", glob_w4_desc: "完璧なデザインの証。私たちのUIが目指すものです。",
+                glob_cat2: "世界トップクラスの実行力（デモ）", glob_d1_title: "ルーブル美術館", glob_d1_desc: "キュレーションの傑作。それをナビゲートする5つ星のハブが不可欠です。", glob_d2_title: "CERN 大型ハドロン衝突型加速器", glob_d2_desc: "最高レベルの精度と完璧さ。私たちのコードにも同じ哲学をもたらします。", glob_d3_title: "MIT メディアラボ", glob_d3_desc: "イノベーションの先駆者。私たちの動的更新システムのように、常に未来を再構築しています。",
+                glob_cat3: "象徴的なランドマーク", glob_l1_title: "エッフェル塔", glob_l1_desc: "時には風景を、そして常識を打ち破る革新が必要です。", glob_l2_title: "ブルジュ・ハリファ", glob_l2_desc: "世界一高いビル。常に高い目標を掲げ、ユーザーにトップ技術を提供しましょう。",
+                dir_directions: "道順 &rarr;"
+            },
+            'zh': {
+                tab_overview: "产品概述", tab_menu: "功能菜单", tab_guide_global: "全球目录",
+                company_name: "Hello Charchee", company_sub: "酒店Info中心", footer_slogan: "卓越的酒店Info中心。",
+                card1_title: "零摩擦", card1_body1: "组织机构让用户陷入了令人沮丧的迷宫，仅仅是为了寻找基本信息或资源。", card1_body2: "Hello Charchee 是一款无需下载的无摩擦网络应用程序。我们用优雅、即时的仪表板取代了过时的手册和笨重的组织门户网站。",
+                card2_title: "深层功能", card2_f1_title: "原生翻译:", card2_f1_desc: "瞬间将您的整个信息中心翻译成7种语言。", card2_f2_title: "数字指南:", card2_f2_desc: "专为满足您组织机构确切需求而量身定制的资源、链接和文档的结构化目录。", card2_f3_title: "支持团队减负:", card2_f3_desc: "一键访问常见问题解答和联系方式，大幅减少对您运营团队的重复提问。",
+                card3_title: "价格与部署", card3_plan1_title: "包月计划", card3_month: "/ 月", card3_plan1_desc: "安全的云托管、SSL 安全以及持续更新。可随时取消。", card3_annual_badge: "赠送两个月", card3_plan2_title: "年度计划", card3_year: "/ 年", card3_plan2_desc: "一次性简单付款让您高枕无忧。无月费。以10个月的价格享受12个月的安全托管。",
+                plan_feat1: "定制UI品牌", plan_feat2: "7语言翻译矩阵", plan_feat3: "数字指南与本地审计", plan_feat4: "安全云托管", plan_feat_all: "包含月度计划所有内容", plan_feat5: "优先支持", plan_feat6: "包含免费2个月", plan_btn: "选择计划",
+                card4_title: "开始", card4_subtitle: "准备好提升您的用户体验了吗？", card4_action: "点击复制邮箱", card4_hover: "已复制",
+
+                menu_title: "无摩擦中心", menu_subtitle: "高端Info科技的体验", menu_badge: "无需下载",
+                menu_cat1: "快速致胜 (快速回报)", item_wifi: "一键访问共享", desc_wifi: "用户只需点击即可复制密码。零拼写错误，零繁琐的支持电话。", item_qr: "QR代码部署", desc_qr: "将我们优雅的QR码放置在办公室或活动中以实现即时访问。",
+                menu_cat2: "核心引擎 (功能)", item_translate: "7语言翻译矩阵", desc_translate: "原生无缝翻译所有政策、时间表和资源。无第三方插件。", item_local: "数字指南", desc_local: "结构化、易于导航的资源建议，我们不断更新以确保绝对准确。", item_branding: "定制品牌", desc_branding: "我们精确匹配您的十六进制颜色和排版。宛如您组织的延伸。", item_dynamic: "动态内容模块", desc_dynamic: "当您的团队更新政策时，中心几秒钟即可更新。无需重新打印文档。",
+                menu_cat3: "长期价值", item_reviews: "高满意度", desc_reviews: "无摩擦的访问 = 更好的用户反馈。", item_labor: "节省时间", desc_labor: "让您的团队专注于高价值工作。", item_eco: "环保", desc_eco: "消除纸张浪费和打印成本。", item_modern: "现代UX", desc_modern: "满足当今用户的期望。",
+
+                glob_cat1: "世界七大奇迹 (演示)", glob_w1_title: "中国长城", glob_w1_desc: "工程奇迹，经久不衰——就像 Hello Charchee 强大的基础设施一样。", glob_w2_title: "马丘比丘", glob_w2_desc: "令人惊叹的高空景观。这是我们提供的高端用户体验的完美隐喻。", glob_w3_title: "罗马斗兽场", glob_w3_desc: "历史悠久的娱乐。我们同样让您的用户保持参与并获取信息。", glob_w4_title: "泰姬陵", glob_w4_desc: "完美设计与对称的证明。这正是我们定制UI界面的目标。",
+                glob_cat2: "世界级执行 (演示)", glob_d1_title: "卢浮宫", glob_d1_desc: "策展的杰作。唯一缺少的就是一个用于导航它的五星级中心。", glob_d2_title: "CERN 大型强子对撞机", glob_d2_desc: "最高水平的精准与完美。我们将完全相同的理念带入我们的代码库中。", glob_d3_title: "MIT 媒体实验室", glob_d3_desc: "创新的先驱。不断重塑未来，就像我们的动态更新系统一样。",
+                glob_cat3: "标志性地标", glob_l1_title: "埃菲尔铁塔", glob_l1_desc: "一座所有人都说不要建的辉煌建筑。有时候，你必须颠覆景观。", glob_l2_title: "哈利法塔", glob_l2_desc: "世界最高建筑。志存高远，为您的用户提供顶级技术。",
+                dir_directions: "路线 &rarr;"
+            },
+            'pl': {
+                tab_overview: "Przegląd", tab_menu: "Menu Funkcji", tab_guide_global: "Globalny Katalog",
+                company_name: "Hello Charchee", company_sub: "Hotelowe Centra Info", footer_slogan: "Najlepsze Hotelowe Centra Info.",
+                card1_title: "Zero Tarcia", card1_body1: "Organizacje zmuszają użytkowników do frustrującego labiryntu tylko po to, by znaleźć podstawowe informacje.", card1_body2: "Hello Charchee to aplikacja internetowa bez pobierania. Zastępujemy przestarzałe instrukcje i portale eleganckim pulpitem.",
+                card2_title: "Głębokie Możliwości", card2_f1_title: "Natywne Tłumaczenie:", card2_f1_desc: "Błyskawicznie tłumaczy całe centrum na 7 języków bez niedokładnych wtyczek.", card2_f2_title: "Cyfrowy Przewodnik:", card2_f2_desc: "Ustrukturyzowany katalog zasobów dostosowany dokładnie do potrzeb Twojej organizacji.", card2_f3_title: "Odciążenie Wsparcia:", card2_f3_desc: "Dostęp jednym dotknięciem do FAQ drastycznie zmniejsza liczbę pytań do Twojego zespołu.",
+                card3_title: "Cennik i Wdrożenie", card3_plan1_title: "Plan Miesięczny", card3_month: "/ Miesiąc", card3_plan1_desc: "Bezpieczny hosting w chmurze, SSL i ciągłe aktualizacje. Anuluj w dowolnym momencie.", card3_annual_badge: "2 Miesiące Gratis", card3_plan2_title: "Plan Roczny", card3_year: "/ Rok", card3_plan2_desc: "Spokój ducha dzięki jednej prostej płatności. Brak opłat miesięcznych. 12 miesięcy bezpiecznego hostingu w cenie 10.",
+                plan_feat1: "Niestandardowy Branding UI", plan_feat2: "Matryca 7 Języków", plan_feat3: "Cyfrowy Przewodnik i Lokalne Audyty", plan_feat4: "Bezpieczny Hosting w Chmurze", plan_feat_all: "Wszystko w planie miesięcznym", plan_feat5: "Priorytetowe Wsparcie", plan_feat6: "W tym 2 miesiące za darmo", plan_btn: "Wybierz Plan",
+                card4_title: "Zacznij", card4_subtitle: "Gotowy na ulepszenie doświadczeń użytkowników?", card4_action: "Skopiuj email", card4_hover: "Skopiowano",
+
+                menu_title: "Bezproblemowe Centrum", menu_subtitle: "Smak Nowoczesnej Info Technologii", menu_badge: "Brak Pobierania",
+                menu_cat1: "Szybkie Wygrane (Szybki Zwrot)", item_wifi: "Dostęp Jednym Kliknięciem", desc_wifi: "Kopiowanie haseł jednym kliknięciem. Zero błędów i frustrujących telefonów do wsparcia.", item_qr: "Wdrożenie Kodów QR", desc_qr: "Umieść nasze kody QR w biurach dla natychmiastowego dostępu.",
+                menu_cat2: "Główny Silnik (Funkcje)", item_translate: "Matryca 7 Języków", desc_translate: "Bezproblemowe tłumaczenie zasad i zasobów bez wtyczek stron trzecich.", item_local: "Cyfrowy Przewodnik", desc_local: "Ustrukturyzowane rekomendacje zasobów aktualizowane w celu zapewnienia dokładności.", item_branding: "Branding na Wymiar", desc_branding: "Dopasowujemy się do Twoich kolorów i typografii. Jak przedłużenie Twojej organizacji.", item_dynamic: "Dynamiczne Moduły", desc_dynamic: "Gdy zespół aktualizuje zasady, centrum odświeża się w sekundy.",
+                menu_cat3: "Wartość Długoterminowa", item_reviews: "Wysoka Satysfakcja", desc_reviews: "Dostęp bez tarcia = lepsze opinie użytkowników.", item_labor: "Oszczędność Czasu", desc_labor: "Skup swój zespół na pracy o wysokiej wartości.", item_eco: "Ekologia", desc_eco: "Wyeliminuj zużycie papieru i koszty druku.", item_modern: "Nowoczesny UX", desc_modern: "Spełniaj oczekiwania dzisiejszych użytkowników.",
+
+                glob_cat1: "7 Cudów Świata (Demo)", glob_w1_title: "Wielki Mur Chiński", glob_w1_desc: "Cud inżynierii zbudowany na wieczność – podobnie jak nasza infrastruktura.", glob_w2_title: "Machu Picchu", glob_w2_desc: "Wzniosłe widoki, idealna metafora wzniosłych doświadczeń Twoich użytkowników.", glob_w3_title: "Koloseum", glob_w3_desc: "Historyczna rozrywka. Utrzymujemy użytkowników zaangażowanych i poinformowanych.", glob_w4_title: "Tadź Mahal", glob_w4_desc: "Świadectwo perfekcyjnego designu. To samo osiągamy w naszym interfejsie.",
+                glob_cat2: "Wykonanie Klasy Światowej (Demo)", glob_d1_title: "Luwr", glob_d1_desc: "Arcydzieło kuracji. Brakuje tylko 5-gwiazdkowego centrum do nawigacji.", glob_d2_title: "Wielki Zderzacz Hadronów", glob_d2_desc: "Precyzja i perfekcja na najwyższym poziomie. Tę samą filozofię wprowadzamy do kodu.", glob_d3_title: "MIT Media Lab", glob_d3_desc: "Pionierzy innowacji. Ciągle wymyślają przyszłość na nowo, jak nasz system.",
+                glob_cat3: "Kultowe Zabytki", glob_l1_title: "Wieża Eiffla", glob_l1_desc: "Genialna struktura, której budowę odradzali. Czasami trzeba zakłócić krajobraz.", glob_l2_title: "Burdż Chalifa", glob_l2_desc: "Najwyższy budynek na świecie. Mierz wysoko i zapewnij najlepszą technologię.",
+                dir_directions: "Kierunki &rarr;"
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // Tab Logic
+            const tabs = [
+                { id: 'guide', btn: document.getElementById('btn-guide'), view: document.getElementById('view-guide') },
+                { id: 'menu', btn: document.getElementById('btn-menu'), view: document.getElementById('view-menu') },
+                { id: 'directory', btn: document.getElementById('btn-directory'), view: document.getElementById('view-directory') }
+            ];
+
+            function switchTab(selectedId) {
+                tabs.forEach(tab => {
+                    tab.view.classList.remove('view-section');
+                    void tab.view.offsetWidth; // trigger reflow
+                    
+                    if (tab.id === selectedId) {
+                        tab.btn.classList.add('bg-brand', 'text-white', 'shadow-md');
+                        tab.btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-100', 'dark:hover:bg-slate-700');
+                        tab.view.classList.remove('hidden');
+                        tab.view.classList.add('view-section');
+                    } else {
+                        tab.btn.classList.remove('bg-brand', 'text-white', 'shadow-md');
+                        tab.btn.classList.add('text-slate-600', 'dark:text-slate-300', 'hover:bg-slate-100', 'dark:hover:bg-slate-700');
+                        tab.view.classList.add('hidden');
+                    }
+                });
+            }
+
+            tabs.forEach(tab => {
+                if(tab.btn) tab.btn.addEventListener('click', () => switchTab(tab.id));
+            });
+
+            // Translation Logic
+            let currentLang = 'en';
+
+            function translatePage(language) {
+                currentLang = language;
+                const langData = { ...translations['en'], ...translations[language] };
+
+                document.querySelectorAll('[data-key]').forEach(element => {
+                    const key = element.getAttribute('data-key');
+                    if (langData[key]) {
+                        element.innerHTML = langData[key];
+                    }
+                });
+                updateClock(); 
+            }
+            
+            const languageSelector = document.getElementById('languageSelector');
+            if (languageSelector) {
+                languageSelector.addEventListener('click', function(e) {
+                    const button = e.target.closest('button[data-lang]');
+                    if (!button) return;
+
+                    const language = button.dataset.lang;
+                    translatePage(language);
+                    
+                    languageSelector.querySelector('.active').classList.remove('active');
+                    button.classList.add('active');
+                });
+            }
+
+            // Accordion Logic for all views
+            ['view-guide', 'view-menu', 'view-directory'].forEach(viewId => {
+                const accordionContainer = document.getElementById(viewId);
+                if (accordionContainer) {
+                    accordionContainer.addEventListener('click', function(e) {
+                        const button = e.target.closest('.accordion-trigger');
+                        if (!button) return;
+
+                        const card = button.closest('.menu-card');
+                        const wasActive = card.classList.contains('active');
+                        
+                        accordionContainer.querySelectorAll('.menu-card').forEach(c => {
+                            c.classList.remove('active');
+                            c.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'false');
+                        });
+                        
+                        if (!wasActive) {
+                            card.classList.add('active');
+                            button.setAttribute('aria-expanded', 'true');
+                        }
+                    });
+                }
+            });
+
+            // Email Copy Logic
+            const emailCode = document.getElementById('emailCode');
+            if (emailCode) {
+                emailCode.addEventListener('click', function() {
+                    const code = 'hellocharchee@gmail.com';
+                    const textArea = document.createElement("textarea");
+                    textArea.value = code;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        const copyText = document.getElementById('emailCopyText');
+                        const originalText = copyText.innerText;
+                        copyText.innerText = "Copied!";
+                        setTimeout(() => {
+                            copyText.innerText = originalText;
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                });
+            }
+
+            // Theme Toggle Logic
+            const themeToggle = document.getElementById('themeToggle');
+            const htmlElement = document.documentElement;
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    if (htmlElement.classList.contains('dark')) {
+                        htmlElement.classList.remove('dark');
+                        localStorage.setItem('theme', 'light');
+                    } else {
+                        htmlElement.classList.add('dark');
+                        localStorage.setItem('theme', 'dark');
+                    }
+                });
+
+                if (localStorage.getItem('theme') === 'light') {
+                    htmlElement.classList.remove('dark');
+                } else {
+                    htmlElement.classList.add('dark');
+                }
+            }
+
+            // Clock Logic
+            function updateClock() {
+                const now = new Date();
+                const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+                const timeOptions = { hour: 'numeric', minute: '2-digit' };
+                const localeMap = {
+                    'en': 'en-US', 'es': 'es-ES', 'de': 'de-DE', 
+                    'fr': 'fr-FR', 'zh': 'zh-CN', 'ja': 'ja-JP', 'pl': 'pl-PL'
+                };
+                const locale = localeMap[currentLang] || 'en-US';
+                const dateString = now.toLocaleDateString(locale, dateOptions);
+                const timeString = now.toLocaleTimeString(locale, timeOptions);
+                
+                const clockElement = document.getElementById('live-clock');
+                if (clockElement) {
+                    clockElement.innerHTML = `LIVE DEMO &nbsp;&bull;&nbsp; ${timeString}`;
+                }
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
+
+            // Weather Logic
+            async function fetchWeather() {
+                const weatherEl = document.getElementById('live-weather');
+                try {
+                    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=33.4484&longitude=-112.0740&current_weather=true&temperature_unit=fahrenheit');
+                    const data = await res.json();
+                    
+                    const tempF = Math.round(data.current_weather.temperature);
+                    const tempC = Math.round((tempF - 32) * 5 / 9);
+                    const code = data.current_weather.weathercode;
+                    
+                    let icon = '☀️';
+                    if (code >= 1 && code <= 3) icon = '⛅';
+                    else if (code >= 45 && code <= 48) icon = '🌫️';
+                    else if (code >= 51 && code <= 67) icon = '🌧️';
+                    else if (code >= 71 && code <= 86) icon = '❄️';
+                    else if (code >= 95) icon = '⛈️';
+                    
+                    if (weatherEl) {
+                        weatherEl.innerHTML = `${icon} ${tempF}&deg;F / ${tempC}&deg;C`;
+                        weatherEl.classList.remove('animate-pulse');
+                    }
+                } catch (e) {
+                    if (weatherEl) {
+                        weatherEl.innerHTML = '☀️ 75&deg;F / 24&deg;C';
+                        weatherEl.classList.remove('animate-pulse');
+                    }
+                }
+            }
+            fetchWeather();
+
+            // Splash Screen Removal Logic
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if(splash) splash.classList.add('hidden-splash');
+                
+                document.body.classList.add('app-loaded');
+            }, 3200); 
+        });
+    </script>
+</body>
+</html>
