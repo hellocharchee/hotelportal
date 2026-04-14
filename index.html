@@ -20,8 +20,8 @@
                     },
                     colors: {
                         brand: {
-                            /* Elegant Champagne Gold / Amber for luxury tech */
-                            light: '#fbbf24', DEFAULT: '#d97706', dark: '#b45309', 
+                            /* Electric Icy Blue / Cyan for the new deep space theme */
+                            light: '#7dd3fc', DEFAULT: '#38bdf8', dark: '#0284c7', 
                         }
                     }
                 }
@@ -63,11 +63,11 @@
         .menu-card:hover {
             transform: translateY(-1px);
             background-color: rgba(255, 255, 255, 0.9);
-            border-color: rgba(217, 119, 6, 0.3);
+            border-color: rgba(56, 189, 248, 0.3);
         }
         .dark .menu-card:hover {
             background-color: rgba(51, 65, 85, 0.9);
-            border-color: rgba(217, 119, 6, 0.4);
+            border-color: rgba(56, 189, 248, 0.4);
         }
 
         .accordion-content {
@@ -118,10 +118,10 @@
         .animate-text-gradient {
             background: linear-gradient(
                 270deg, 
-                #fbbf24, 
+                #7dd3fc, 
                 #FFFFFF, 
-                #d97706, 
-                #fbbf24
+                #0284c7, 
+                #7dd3fc
             );
             background-size: 200% 200%;
             -webkit-background-clip: text;
@@ -132,8 +132,8 @@
         }
 
         @keyframes pulse-bar-glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(217, 119, 6, 0.4); transform: scaleX(1); opacity: 0.8; }
-            50% { box-shadow: 0 0 25px rgba(217, 119, 6, 0.9); transform: scaleX(1.15); opacity: 1; }
+            0%, 100% { box-shadow: 0 0 10px rgba(56, 189, 248, 0.4); transform: scaleX(1); opacity: 0.8; }
+            50% { box-shadow: 0 0 25px rgba(56, 189, 248, 0.9); transform: scaleX(1.15); opacity: 1; }
         }
         
         .animate-pulse-bar {
@@ -170,11 +170,11 @@
         .splash-line {
             width: 0;
             height: 3px;
-            background: linear-gradient(90deg, transparent, #d97706, transparent);
+            background: linear-gradient(90deg, transparent, #38bdf8, transparent);
             border-radius: 9999px;
             margin-top: 1.5rem;
             animation: splashLineExpand 1s cubic-bezier(0.16, 1, 0.3, 1) forwards 1.2s;
-            box-shadow: 0 0 20px rgba(217, 119, 6, 0.6);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
         }
         .splash-slogan {
             opacity: 0;
@@ -222,9 +222,9 @@
         </div>
     </div>
 
-    <!-- Blank & Gold Clean Gradient Background -->
+    <!-- Blank & Cyan Clean Gradient Background -->
     <div class="fixed inset-0 z-[-2] bg-slate-100 dark:bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-200/40 via-transparent to-transparent dark:from-amber-900/20 dark:via-transparent dark:to-transparent"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-sky-200/40 via-transparent to-transparent dark:from-sky-900/20 dark:via-transparent dark:to-transparent"></div>
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-slate-200 via-transparent to-transparent dark:from-slate-800/50 dark:via-transparent dark:to-transparent"></div>
     </div>
 
@@ -246,7 +246,7 @@
                 <button data-lang="ja" class="lang-btn transition-transform hover:scale-110 opacity-60 hover:opacity-100" aria-label="日本語"><img src="https://flagcdn.com/w40/jp.png" class="w-6 h-6 rounded-full object-cover shadow-sm" alt="Japan Flag"></button>
                 <button data-lang="pl" class="lang-btn transition-transform hover:scale-110 opacity-60 hover:opacity-100" aria-label="Polski"><img src="https://flagcdn.com/w40/pl.png" class="w-6 h-6 rounded-full object-cover shadow-sm" alt="Polish Flag"></button>
             </div>
-            <button id="themeToggle" class="theme-toggle ml-4 p-3 rounded-full shadow-lg text-slate-700 dark:text-yellow-300 fade-in-up" aria-label="Toggle Dark Mode" style="animation-delay: 100ms;">
+            <button id="themeToggle" class="theme-toggle ml-4 p-3 rounded-full shadow-lg text-slate-700 dark:text-sky-300 fade-in-up" aria-label="Toggle Dark Mode" style="animation-delay: 100ms;">
                 <svg class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <svg class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
             </button>
